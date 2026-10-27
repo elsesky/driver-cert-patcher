@@ -35,6 +35,20 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Convert source encoding (GBK → UTF-8)
+        run: |
+          python -c "
+          import sys
+          for f in ['patcher_gui.py', 'build.bat', 'compile_patcher.bat']:
+              try:
+                  data = open(f, 'rb').read()
+                  text = data.decode('gbk')
+                  open(f, 'w', encoding='utf-8').write(text)
+                  print(f'{f}: GBK -> UTF-8 OK ({len(text)} chars)')
+              except Exception as e:
+                  print(f'{f}: skip ({e})')
+          "
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
