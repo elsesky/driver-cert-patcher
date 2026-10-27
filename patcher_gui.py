@@ -1,15 +1,15 @@
-# -*- coding: gbk -*-
+# -*- coding: utf-8 -*-
 """
 nvidia_grid_driver_patcher GUI
 ================================
-Îª NVIDIA vGPU (GRID) µÄ nvxdapix.dll ´ò NLS Ö¤Êé²¹¶¡¡£
+ä¸º NVIDIA vGPU (GRID) çš„ nvxdapix.dll æ‰“ NLS è¯ä¹¦è¡¥ä¸ã€‚
 
-Á÷³Ì:
-  1. É¨Ãè DriverStore ÖĞËùÓĞ nvxdapix.dll, ¸´Ñ¡¿ò¶àÑ¡Òª´¦ÀíµÄ°æ±¾
-  2. ¸ùÖ¤Êé: ÎÄ¼şÑ¡Ôñ (¶ÁÈ¡ÄÚÈİµ½ÎÄ±¾¿ò) »òÖ±½ÓÕ³Ìùµ½ÎÄ±¾¿ò
-  3. ´ò²¹¶¡Ç°Ğ£ÑéÖ¤ÊéÄÚÈİ, Í¨¹ıºóĞ´ÁÙÊ± .pem
-  4. ¶ÔÃ¿¸ö¹´Ñ¡µÄ DLL: µ÷ÓÃ gridd-unlock-patcher.exe Éú³É²¹¶¡,
-     Í£·şÎñ -> ±¸·İ -> ÊÚÈ¨ -> ¸²¸Ç -> Æğ·şÎñ
+æµç¨‹:
+  1. æ‰«æ DriverStore ä¸­æ‰€æœ‰ nvxdapix.dll, å¤é€‰æ¡†å¤šé€‰è¦å¤„ç†çš„ç‰ˆæœ¬
+  2. æ ¹è¯ä¹¦: æ–‡ä»¶é€‰æ‹© (è¯»å–å†…å®¹åˆ°æ–‡æœ¬æ¡†) æˆ–ç›´æ¥ç²˜è´´åˆ°æ–‡æœ¬æ¡†
+  3. æ‰“è¡¥ä¸å‰æ ¡éªŒè¯ä¹¦å†…å®¹, é€šè¿‡åå†™ä¸´æ—¶ .pem
+  4. å¯¹æ¯ä¸ªå‹¾é€‰çš„ DLL: è°ƒç”¨ gridd-unlock-patcher.exe ç”Ÿæˆè¡¥ä¸,
+     åœæœåŠ¡ -> å¤‡ä»½ -> æˆæƒ -> è¦†ç›– -> èµ·æœåŠ¡
 """
 
 import os
@@ -30,30 +30,30 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from datetime import datetime
 
-# ---------------------------------------------------------------- Â·¾¶´¦Àí
+# ---------------------------------------------------------------- è·¯å¾„å¤„ç†
 def resource_path(rel):
-    """´ò°üºó×ÊÔ´Î»ÓÚ sys._MEIPASS, ¿ª·¢Ê±Î»ÓÚ½Å±¾Ä¿Â¼¡£"""
-    base = getattr(sys, "_MEIPASS", os.p10.0021234ath.dirname(os.path.abspath(__file__)))
+    """æ‰“åŒ…åèµ„æºä½äº sys._MEIPASS, å¼€å‘æ—¶ä½äºè„šæœ¬ç›®å½•ã€‚"""
+    base = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base, rel)
 
 
 def app_dir():
-    """gridd-unlock-patcher.exe ËùÔÚÄ¿Â¼ (ÓëÖ÷³ÌĞòÍ¬Ä¿Â¼, ±ãÓÚÓÃ»§·Å²¹¶¡¹¤¾ß)¡£"""
+    """gridd-unlock-patcher.exe æ‰€åœ¨ç›®å½• (ä¸ä¸»ç¨‹åºåŒç›®å½•, ä¾¿äºç”¨æˆ·æ”¾è¡¥ä¸å·¥å…·)ã€‚"""
     if getattr(sys, "frozen", False):
         return os.path.dirname(sys.executable)
     return os.path.dirname(os.path.abspath(__file__))
 
 
 def temp_dir():
-    """³ÌĞòÍ¬Â·¾¶µÄ temp ÎÄ¼ş¼Ğ, ÓÃÓÚ´æ·Å´ı´ò²¹¶¡µÄ DLL ÓëÖ¤Êé¸±±¾¡£"""
+    """ç¨‹åºåŒè·¯å¾„çš„ temp æ–‡ä»¶å¤¹, ç”¨äºå­˜æ”¾å¾…æ‰“è¡¥ä¸çš„ DLL ä¸è¯ä¹¦å‰¯æœ¬ã€‚"""
     d = os.path.join(app_dir(), "temp")
     os.makedirs(d, exist_ok=True)
     return d
 
 
-# gridd-unlock-patcher.exe ¶¨Î»:
-#   ÓÅÏÈ: ÓëÖ÷³ÌĞòÍ¬Ä¿Â¼ (app_dir), ·¢°æÊ±Ëæ release Ò»ÆğÌá¹©
-#   ºó±¸: ´ò°üÄÚÖÃ (sys._MEIPASS, ÓÉ --add-data ´òÈë)
+# gridd-unlock-patcher.exe å®šä½:
+#   ä¼˜å…ˆ: ä¸ä¸»ç¨‹åºåŒç›®å½• (app_dir), å‘ç‰ˆæ—¶éš release ä¸€èµ·æä¾›
+#   åå¤‡: æ‰“åŒ…å†…ç½® (sys._MEIPASS, ç”± --add-data æ‰“å…¥)
 def find_patcher_exe():
     cands = []
     cands.append(os.path.join(app_dir(), "gridd-unlock-patcher.exe"))
@@ -62,16 +62,16 @@ def find_patcher_exe():
     for c in cands:
         if os.path.exists(c):
             return c
-    # ¶¼²»´æÔÚÊ±, ·µ»ØÊ×Ñ¡Â·¾¶(Í¬Ä¿Â¼), ¹©Æô¶¯¼ì²é±¨´íÊ¹ÓÃ
+    # éƒ½ä¸å­˜åœ¨æ—¶, è¿”å›é¦–é€‰è·¯å¾„(åŒç›®å½•), ä¾›å¯åŠ¨æ£€æŸ¥æŠ¥é”™ä½¿ç”¨
     return cands[0]
 
 
 PATCHER_EXE = find_patcher_exe()
 
 def find_processes_using_dll(path):
-    """·µ»Ø¼ÓÔØÁËÖ¸¶¨ DLL µÄ½ø³ÌÁĞ±í [(pid, ½ø³ÌÃû), ...]¡£
+    """è¿”å›åŠ è½½äº†æŒ‡å®š DLL çš„è¿›ç¨‹åˆ—è¡¨ [(pid, è¿›ç¨‹å), ...]ã€‚
 
-    ÓÃ psutil ±éÀúËùÓĞ½ø³ÌµÄÒÑÓ³ÉäÄ£¿é, ¾«È·Æ¥Åä DLL Â·¾¶ (²»Çø·Ö´óĞ¡Ğ´)¡£
+    ç”¨ psutil éå†æ‰€æœ‰è¿›ç¨‹çš„å·²æ˜ å°„æ¨¡å—, ç²¾ç¡®åŒ¹é… DLL è·¯å¾„ (ä¸åŒºåˆ†å¤§å°å†™)ã€‚
     """
     low = os.path.normcase(path)
     hit = []
@@ -87,9 +87,9 @@ def find_processes_using_dll(path):
 
 
 def kill_processes_using_dll(path, log=None):
-    """Ç¿É±ËùÓĞÈÔ¼ÓÔØÖ¸¶¨ DLL µÄ½ø³Ì (Í£·şÎñºóµÄ¶µµ×, ¶ÔÆë ps1 µÄ Get-Process Âß¼­)¡£
+    """å¼ºæ€æ‰€æœ‰ä»åŠ è½½æŒ‡å®š DLL çš„è¿›ç¨‹ (åœæœåŠ¡åçš„å…œåº•, å¯¹é½ ps1 çš„ Get-Process é€»è¾‘)ã€‚
 
-    ·µ»Ø±»Ç¿É±µÄ½ø³ÌÊı¡£
+    è¿”å›è¢«å¼ºæ€çš„è¿›ç¨‹æ•°ã€‚
     """
     killed = 0
     for pid, name in find_processes_using_dll(path):
@@ -97,11 +97,11 @@ def kill_processes_using_dll(path, log=None):
             prc = psutil.Process(pid)
             prc.terminate()
             if log:
-                log("  ÕıÔÚ½áÊøÕ¼ÓÃ½ø³Ì: %s (PID %d)" % (name, pid))
+                log("  æ­£åœ¨ç»“æŸå ç”¨è¿›ç¨‹: %s (PID %d)" % (name, pid))
             killed += 1
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             pass
-    # ¸ø±» terminate µÄ½ø³ÌÒ»µãÊ±¼äÍË³ö
+    # ç»™è¢« terminate çš„è¿›ç¨‹ä¸€ç‚¹æ—¶é—´é€€å‡º
     if killed:
         gone, alive = psutil.wait_procs(
             [psutil.Process(pid) for pid, _ in find_processes_using_dll(path)],
@@ -111,14 +111,14 @@ def kill_processes_using_dll(path, log=None):
             try:
                 prc.kill()
                 if log:
-                    log("  Ç¿ÖÆ½áÊø½ø³Ì: %s (PID %d)" % (prc.name(), prc.pid))
+                    log("  å¼ºåˆ¶ç»“æŸè¿›ç¨‹: %s (PID %d)" % (prc.name(), prc.pid))
             except Exception:
                 pass
     return killed
 
 
 def backup_session_dir():
-    """´´½¨Ò»´Î±¸·İ»á»°Ä¿Â¼: BACKUP_DIR/<unixÊ±¼ä´Á>/, ·µ»Ø¸ÃÄ¿Â¼¡£"""
+    """åˆ›å»ºä¸€æ¬¡å¤‡ä»½ä¼šè¯ç›®å½•: BACKUP_DIR/<unixæ—¶é—´æˆ³>/, è¿”å›è¯¥ç›®å½•ã€‚"""
     os.makedirs(BACKUP_DIR, exist_ok=True)
     ts = int(time.time())
     d = os.path.join(BACKUP_DIR, str(ts))
@@ -127,35 +127,35 @@ def backup_session_dir():
 
 
 def backup_one_dll(dll_path, session_dir, log=None):
-    """±¸·İµ¥¸ö DLL µ½»á»°Ä¿Â¼, ±£Áô DriverStore ÏÂµÄÏà¶ÔÂ·¾¶½á¹¹¡£
+    """å¤‡ä»½å•ä¸ª DLL åˆ°ä¼šè¯ç›®å½•, ä¿ç•™ DriverStore ä¸‹çš„ç›¸å¯¹è·¯å¾„ç»“æ„ã€‚
 
-    Àı: C:/Windows/.../DriverStore/FileRepository/nv_dispsi.inf_amd64_x/nvxdapix.dll
+    ä¾‹: C:/Windows/.../DriverStore/FileRepository/nv_dispsi.inf_amd64_x/nvxdapix.dll
         -> <session_dir>/FileRepository/nv_dispsi.inf_amd64_x/nvxdapix.dll
-    ·µ»Ø¸Ã DLL ÔÚ»á»°Ä¿Â¼ÄÚµÄÏà¶ÔÂ·¾¶ (Ïà¶Ô DriverStore), Ê§°Ü·µ»Ø None¡£
+    è¿”å›è¯¥ DLL åœ¨ä¼šè¯ç›®å½•å†…çš„ç›¸å¯¹è·¯å¾„ (ç›¸å¯¹ DriverStore), å¤±è´¥è¿”å› Noneã€‚
     """
     try:
-        # Ïà¶Ô DriverStore µÄÂ·¾¶ (±£Áô FileRepository\xxx ½á¹¹, ±£ÁôÔ­Ê¼´óĞ¡Ğ´)
+        # ç›¸å¯¹ DriverStore çš„è·¯å¾„ (ä¿ç•™ FileRepository\xxx ç»“æ„, ä¿ç•™åŸå§‹å¤§å°å†™)
         drv_norm = os.path.normcase(DRV_ROOT)
         full_norm = os.path.normcase(dll_path)
         if full_norm.startswith(drv_norm):
             rel = os.path.relpath(dll_path, DRV_ROOT)
         else:
-            # ²»ÔÚ DriverStore ÏÂÊ±, ÓÃ¸¸Ä¿Â¼Ãû + ÎÄ¼şÃû¶µµ×
+            # ä¸åœ¨ DriverStore ä¸‹æ—¶, ç”¨çˆ¶ç›®å½•å + æ–‡ä»¶åå…œåº•
             rel = os.path.basename(os.path.dirname(dll_path)) + "\\" + os.path.basename(dll_path)
         dest = os.path.join(session_dir, rel)
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         shutil.copy2(dll_path, dest)
         if log:
-            log("  ÒÑ±¸·İ: %s -> %s" % (dll_path, dest))
+            log("  å·²å¤‡ä»½: %s -> %s" % (dll_path, dest))
         return rel
     except Exception as e:
         if log:
-            log("  [´íÎó] ±¸·İÊ§°Ü %s: %s" % (dll_path, e))
+            log("  [é”™è¯¯] å¤‡ä»½å¤±è´¥ %s: %s" % (dll_path, e))
         return None
 
 
 def write_manifest(session_dir, entries):
-    """Ğ´ manifest.json, entries: [(Ô­Ê¼dllÂ·¾¶, »á»°ÄÚÏà¶ÔÂ·¾¶), ...]"""
+    """å†™ manifest.json, entries: [(åŸå§‹dllè·¯å¾„, ä¼šè¯å†…ç›¸å¯¹è·¯å¾„), ...]"""
     data = {
         "created_ts": int(time.time()),
         "created_str": datetime.fromtimestamp(int(time.time())).strftime("%Y-%m-%d %H:%M:%S"),
@@ -168,8 +168,8 @@ def write_manifest(session_dir, entries):
 
 
 def list_backup_sessions():
-    """ÁĞ³ö BACKUP_DIR ÏÂËùÓĞÓĞĞ§»á»°Ä¿Â¼ (º¬ manifest.json)¡£
-    ·µ»Ø [(»á»°Ä¿Â¼, Ê±¼ä´Áint, ´´½¨Ê±¼ästr), ...] °´Ê±¼äµ¹Ğò¡£"""
+    """åˆ—å‡º BACKUP_DIR ä¸‹æ‰€æœ‰æœ‰æ•ˆä¼šè¯ç›®å½• (å« manifest.json)ã€‚
+    è¿”å› [(ä¼šè¯ç›®å½•, æ—¶é—´æˆ³int, åˆ›å»ºæ—¶é—´str), ...] æŒ‰æ—¶é—´å€’åºã€‚"""
     result = []
     if not os.path.isdir(BACKUP_DIR):
         return result
@@ -192,7 +192,7 @@ def list_backup_sessions():
 
 
 def read_manifest(session_dir):
-    """¶Á manifest.json, ·µ»Ø [(Ô­Ê¼dllÂ·¾¶, »á»°ÄÚÏà¶ÔÂ·¾¶), ...], Ê§°Ü·µ»Ø []¡£"""
+    """è¯» manifest.json, è¿”å› [(åŸå§‹dllè·¯å¾„, ä¼šè¯å†…ç›¸å¯¹è·¯å¾„), ...], å¤±è´¥è¿”å› []ã€‚"""
     mp = os.path.join(session_dir, "manifest.json")
     if not os.path.exists(mp):
         return []
@@ -212,7 +212,7 @@ BEGIN_MARK = "-----BEGIN CERTIFICATE-----"
 END_MARK = "-----END CERTIFICATE-----"
 
 
-# ---------------------------------------------------------------- ¹¤¾ßº¯Êı
+# ---------------------------------------------------------------- å·¥å…·å‡½æ•°
 def is_admin():
     try:
         return bool(ctypes.windll.shell32.IsUserAnAdmin())
@@ -221,7 +221,7 @@ def is_admin():
 
 
 def relaunch_admin():
-    """ÒÔ¹ÜÀíÔ±Éí·İÖØĞÂÔËĞĞ±¾³ÌĞò (UAC)¡£"""
+    """ä»¥ç®¡ç†å‘˜èº«ä»½é‡æ–°è¿è¡Œæœ¬ç¨‹åº (UAC)ã€‚"""
     params = " ".join('"%s"' % a for a in sys.argv)
     try:
         ctypes.windll.shell32.ShellExecuteW(
@@ -239,37 +239,37 @@ def fmt_time(ts):
 
 
 def inf_name_from_path(path):
-    """´Ó ...\\<inf>.inf_amd64_xxx\\nvxdapix.dll ÌáÈ¡ inf Ãû¡£"""
+    """ä» ...\\<inf>.inf_amd64_xxx\\nvxdapix.dll æå– inf åã€‚"""
     folder = os.path.basename(os.path.dirname(path))
-    # ĞÎÈç nvgridsw.inf_amd64_847af0d59d1a7293
+    # å½¢å¦‚ nvgridsw.inf_amd64_847af0d59d1a7293
     m = re.match(r"^(.*?)(?:\.inf)?(?:_amd64.*)?$", folder)
     name = m.group(1) if m else folder
     return name
 
 
 def _pnputil_oem_map():
-    """½âÎö pnputil /enum-drivers, ·µ»Ø {·¢²¼Ãû³ÆoemXXX.inf: Ô­Ê¼Ãû³Æxxx.inf}¡£
+    """è§£æ pnputil /enum-drivers, è¿”å› {å‘å¸ƒåç§°oemXXX.inf: åŸå§‹åç§°xxx.inf}ã€‚
 
-    Êä³öÎª GBK ÖĞÎÄ, ½á¹¹¹Ì¶¨ (Ã¿¿é 7 ĞĞ, ¿ÕĞĞ·Ö¸ô):
-        ·¢²¼Ãû³Æ:     oem247.inf
-        Ô­Ê¼Ãû³Æ:      nv_dispsi.inf
+    è¾“å‡ºä¸º GBK ä¸­æ–‡, ç»“æ„å›ºå®š (æ¯å— 7 è¡Œ, ç©ºè¡Œåˆ†éš”):
+        å‘å¸ƒåç§°:     oem247.inf
+        åŸå§‹åç§°:      nv_dispsi.inf
         ...
     """
     mapping = {}
     try:
         r = subprocess.run(["pnputil", "/enum-drivers"], capture_output=True,
-                           text=True, encoding="gbk", errors="replace")
+                           text=True, encoding="utf-8", errors="replace")
         out = r.stdout or ""
     except Exception:
         return mapping
     cur_oem = None
     for line in out.splitlines():
         line = line.strip()
-        if line.startswith("·¢²¼Ãû³Æ"):
-            # ·¢²¼Ãû³Æ:     oem247.inf
+        if line.startswith("å‘å¸ƒåç§°"):
+            # å‘å¸ƒåç§°:     oem247.inf
             val = line.split(":", 1)[1].strip() if ":" in line else ""
             cur_oem = val
-        elif line.startswith("Ô­Ê¼Ãû³Æ") and cur_oem:
+        elif line.startswith("åŸå§‹åç§°") and cur_oem:
             val = line.split(":", 1)[1].strip() if ":" in line else ""
             mapping[cur_oem] = val
             cur_oem = None
@@ -277,10 +277,10 @@ def _pnputil_oem_map():
 
 
 def get_active_nvidia_drivers():
-    """²éÑ¯µ±Ç°Êµ¼Ê¼ÓÔØµÄ NVIDIA ÏÔ¿¨Çı¶¯¡£
+    """æŸ¥è¯¢å½“å‰å®é™…åŠ è½½çš„ NVIDIA æ˜¾å¡é©±åŠ¨ã€‚
 
-    ·µ»Ø [(ÏÔ¿¨Ãû³Æ, Ô­Ê¼infÃû), ...]  (Ã¿¿é NVIDIA ÏÔ¿¨Ò»Ìõ, ¶à¿¨È«²é)
-    Í¨¹ı WMI Win32_PnPSignedDriver ÄÃ oemXXX.inf, ÔÙÓÃ pnputil Ó³Éä»ØÔ­Ê¼ inf Ãû¡£
+    è¿”å› [(æ˜¾å¡åç§°, åŸå§‹infå), ...]  (æ¯å— NVIDIA æ˜¾å¡ä¸€æ¡, å¤šå¡å…¨æŸ¥)
+    é€šè¿‡ WMI Win32_PnPSignedDriver æ‹¿ oemXXX.inf, å†ç”¨ pnputil æ˜ å°„å›åŸå§‹ inf åã€‚
     """
     result = []
     ps = r"""
@@ -309,7 +309,7 @@ Get-CimInstance Win32_PnPSignedDriver | Where-Object { $_.Manufacturer -match "N
 
 
 def scan_nvxdapix():
-    """·µ»Ø [(path, inf_name, ctime_str), ...]"""
+    """è¿”å› [(path, inf_name, ctime_str), ...]"""
     results = []
     if not os.path.isdir(DRV_ROOT):
         return results
@@ -327,29 +327,29 @@ def scan_nvxdapix():
 
 
 def validate_cert_text(text):
-    """Ğ£ÑéÖ¤ÊéÎÄ±¾¡£·µ»Ø (ok, error_msg, normalized_text)¡£"""
+    """æ ¡éªŒè¯ä¹¦æ–‡æœ¬ã€‚è¿”å› (ok, error_msg, normalized_text)ã€‚"""
     if not text or not text.strip():
-        return False, "Ö¤ÊéÄÚÈİÎª¿Õ¡£", ""
+        return False, "è¯ä¹¦å†…å®¹ä¸ºç©ºã€‚", ""
     if BEGIN_MARK not in text:
-        return False, "È±ÉÙ %s ¿ªÍ·ĞĞ¡£" % BEGIN_MARK, ""
+        return False, "ç¼ºå°‘ %s å¼€å¤´è¡Œã€‚" % BEGIN_MARK, ""
     if END_MARK not in text:
-        return False, "È±ÉÙ %s ½áÎ²ĞĞ¡£" % END_MARK, ""
+        return False, "ç¼ºå°‘ %s ç»“å°¾è¡Œã€‚" % END_MARK, ""
 
-    # ½ØÈ¡ BEGIN Óë END Ö®¼äµÄ base64 Ìå
+    # æˆªå– BEGIN ä¸ END ä¹‹é—´çš„ base64 ä½“
     try:
         body = text.split(BEGIN_MARK, 1)[1].split(END_MARK, 1)[0]
     except Exception:
-        return False, "Ö¤Êé½á¹¹Òì³£¡£", ""
-    b64 = "".join(body.split())  # È¥µô¿Õ°×
+        return False, "è¯ä¹¦ç»“æ„å¼‚å¸¸ã€‚", ""
+    b64 = "".join(body.split())  # å»æ‰ç©ºç™½
     if not b64:
-        return False, "Ö¤Êé body Îª¿Õ (BEGIN/END Ö®¼äÎŞÄÚÈİ)¡£", ""
-    # Ğ£Ñé base64 ºÏ·¨ĞÔ
+        return False, "è¯ä¹¦ body ä¸ºç©º (BEGIN/END ä¹‹é—´æ— å†…å®¹)ã€‚", ""
+    # æ ¡éªŒ base64 åˆæ³•æ€§
     try:
         base64.b64decode(b64, validate=True)
     except Exception as e:
-        return False, "base64 ½âÂëÊ§°Ü: %s" % e, ""
+        return False, "base64 è§£ç å¤±è´¥: %s" % e, ""
 
-    # ¹æ·¶»¯ÎªÃ¿ĞĞ 64 ×Ö·ûµÄ PEM
+    # è§„èŒƒåŒ–ä¸ºæ¯è¡Œ 64 å­—ç¬¦çš„ PEM
     normalized = BEGIN_MARK + "\n"
     for i in range(0, len(b64), 64):
         normalized += b64[i:i + 64] + "\n"
@@ -357,11 +357,11 @@ def validate_cert_text(text):
     return True, "", normalized
 
 
-# ---------------------------------------------------------------- Ö÷½çÃæ
+# ---------------------------------------------------------------- ä¸»ç•Œé¢
 class PatcherApp:
     def __init__(self, root):
         self.root = root
-        root.title("NVIDIA vGPU nvxdapix.dll ²¹¶¡¹¤¾ß")
+        root.title("NVIDIA vGPU nvxdapix.dll è¡¥ä¸å·¥å…·")
         root.geometry("900x640")
         root.minsize(760, 540)
 
@@ -373,11 +373,11 @@ class PatcherApp:
 
         if not is_admin():
             messagebox.showwarning(
-                "ĞèÒª¹ÜÀíÔ±È¨ÏŞ",
-                "±¾¹¤¾ßĞèÒª¸²¸ÇÏµÍ³Çı¶¯ÎÄ¼ş²¢ÖØÆô·şÎñ, ÇëÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ¡£\n\n"
-                "ÊÇ·ñÁ¢¼´ÒÔ¹ÜÀíÔ±Éí·İÖØĞÂÆô¶¯?",
+                "éœ€è¦ç®¡ç†å‘˜æƒé™",
+                "æœ¬å·¥å…·éœ€è¦è¦†ç›–ç³»ç»Ÿé©±åŠ¨æ–‡ä»¶å¹¶é‡å¯æœåŠ¡, è¯·ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œã€‚\n\n"
+                "æ˜¯å¦ç«‹å³ä»¥ç®¡ç†å‘˜èº«ä»½é‡æ–°å¯åŠ¨?",
             )
-            if messagebox.askyesno("È·ÈÏ", "ÒÔ¹ÜÀíÔ±Éí·İÖØĞÂÆô¶¯?"):
+            if messagebox.askyesno("ç¡®è®¤", "ä»¥ç®¡ç†å‘˜èº«ä»½é‡æ–°å¯åŠ¨?"):
                 relaunch_admin()
 
         self._refresh_backup_list()
@@ -388,8 +388,8 @@ class PatcherApp:
     def _build_ui(self):
         pad = dict(padx=8, pady=4)
 
-        # --- ¶¥²¿: DLL ÁĞ±í ---
-        top = ttk.LabelFrame(self.root, text=" 1. Ñ¡ÔñÒª´ò²¹¶¡µÄ nvxdapix.dll (¿É¶àÑ¡) ")
+        # --- é¡¶éƒ¨: DLL åˆ—è¡¨ ---
+        top = ttk.LabelFrame(self.root, text=" 1. é€‰æ‹©è¦æ‰“è¡¥ä¸çš„ nvxdapix.dll (å¯å¤šé€‰) ")
         top.pack(fill="both", expand=True, **pad)
 
         listframe = ttk.Frame(top)
@@ -405,50 +405,50 @@ class PatcherApp:
 
         btnrow = ttk.Frame(top)
         btnrow.pack(fill="x", padx=4, pady=2)
-        ttk.Button(btnrow, text="Ë¢ĞÂÉ¨Ãè", command=self.refresh_dlls).pack(side="left")
-        ttk.Button(btnrow, text="È«Ñ¡", command=lambda: self._set_all(True)).pack(side="left", padx=4)
-        ttk.Button(btnrow, text="È«²»Ñ¡", command=lambda: self._set_all(False)).pack(side="left")
-        self.selected_lbl = ttk.Label(btnrow, text="ÒÑÑ¡: 0")
+        ttk.Button(btnrow, text="åˆ·æ–°æ‰«æ", command=self.refresh_dlls).pack(side="left")
+        ttk.Button(btnrow, text="å…¨é€‰", command=lambda: self._set_all(True)).pack(side="left", padx=4)
+        ttk.Button(btnrow, text="å…¨ä¸é€‰", command=lambda: self._set_all(False)).pack(side="left")
+        self.selected_lbl = ttk.Label(btnrow, text="å·²é€‰: 0")
         self.selected_lbl.pack(side="right")
 
-        # --- ÖĞ²¿: Ö¤Êé ---
-        cert = ttk.LabelFrame(self.root, text=" 2. ¸ùÖ¤Êé (Ñ¡ÔñÎÄ¼ş »ò Ö±½ÓÕ³ÌùÄÚÈİ) ")
+        # --- ä¸­éƒ¨: è¯ä¹¦ ---
+        cert = ttk.LabelFrame(self.root, text=" 2. æ ¹è¯ä¹¦ (é€‰æ‹©æ–‡ä»¶ æˆ– ç›´æ¥ç²˜è´´å†…å®¹) ")
         cert.pack(fill="x", **pad)
 
         crow = ttk.Frame(cert)
         crow.pack(fill="x", padx=4, pady=2)
-        ttk.Button(crow, text="Ñ¡ÔñÖ¤ÊéÎÄ¼ş (.pem)", command=self.choose_cert_file).pack(side="left")
-        self.cert_path_lbl = ttk.Label(crow, text="Î´Ñ¡ÔñÎÄ¼ş")
+        ttk.Button(crow, text="é€‰æ‹©è¯ä¹¦æ–‡ä»¶ (.pem)", command=self.choose_cert_file).pack(side="left")
+        self.cert_path_lbl = ttk.Label(crow, text="æœªé€‰æ‹©æ–‡ä»¶")
         self.cert_path_lbl.pack(side="left", padx=8)
-        ttk.Button(crow, text="Ğ£ÑéÖ¤Êé", command=self.on_validate).pack(side="right")
+        ttk.Button(crow, text="æ ¡éªŒè¯ä¹¦", command=self.on_validate).pack(side="right")
         self.cert_status = ttk.Label(crow, text="", foreground="gray")
         self.cert_status.pack(side="right", padx=8)
 
         self.cert_text.pack(fill="x", padx=4, pady=2)
         self.cert_text.insert("1.0", "")
 
-        # --- µ×²¿: Ö´ĞĞ + ÈÕÖ¾ ---
-        bot = ttk.LabelFrame(self.root, text=" 3. Ö´ĞĞ ")
+        # --- åº•éƒ¨: æ‰§è¡Œ + æ—¥å¿— ---
+        bot = ttk.LabelFrame(self.root, text=" 3. æ‰§è¡Œ ")
         bot.pack(fill="both", expand=True, **pad)
 
         erow = ttk.Frame(bot)
         erow.pack(fill="x", padx=4, pady=2)
-        self.run_btn = ttk.Button(erow, text="¿ªÊ¼´ò²¹¶¡", command=self.run_patch, state="disabled")
+        self.run_btn = ttk.Button(erow, text="å¼€å§‹æ‰“è¡¥ä¸", command=self.run_patch, state="disabled")
         self.run_btn.pack(side="left")
-        ttk.Button(erow, text="´ò¿ªÈÕÖ¾Ä¿Â¼", command=self.open_log_dir).pack(side="left", padx=6)
-        self.progress = ttk.Label(erow, text="¾ÍĞ÷", foreground="green")
+        ttk.Button(erow, text="æ‰“å¼€æ—¥å¿—ç›®å½•", command=self.open_log_dir).pack(side="left", padx=6)
+        self.progress = ttk.Label(erow, text="å°±ç»ª", foreground="green")
         self.progress.pack(side="right")
 
-        # ±¸·İ»Ö¸´ĞĞ
+        # å¤‡ä»½æ¢å¤è¡Œ
         brow = ttk.Frame(bot)
         brow.pack(fill="x", padx=4, pady=2)
-        ttk.Label(brow, text="±¸·İ:").pack(side="left")
+        ttk.Label(brow, text="å¤‡ä»½:").pack(side="left")
         self.backup_var = tk.StringVar()
         self.backup_combo = ttk.Combobox(brow, textvariable=self.backup_var,
                                          state="readonly", width=34)
         self.backup_combo.pack(side="left", padx=6)
-        ttk.Button(brow, text="Ë¢ĞÂ±¸·İ", command=self._refresh_backup_list).pack(side="left")
-        self.restore_btn = ttk.Button(brow, text="»Ö¸´Ñ¡ÖĞ±¸·İ", command=self.run_restore,
+        ttk.Button(brow, text="åˆ·æ–°å¤‡ä»½", command=self._refresh_backup_list).pack(side="left")
+        self.restore_btn = ttk.Button(brow, text="æ¢å¤é€‰ä¸­å¤‡ä»½", command=self.run_restore,
                                       state="disabled")
         self.restore_btn.pack(side="left", padx=6)
         self.backup_combo.bind("<<ComboboxSelected>>", self._on_backup_selected)
@@ -461,14 +461,14 @@ class PatcherApp:
         lsb.pack(side="right", fill="y")
         self.log.config(yscrollcommand=lsb.set)
 
-    # ---------------- DLL ÁĞ±í ----------------
+    # ---------------- DLL åˆ—è¡¨ ----------------
     def refresh_dlls(self):
-        self.log_msg("ÕıÔÚÉ¨Ãè %s ..." % DRV_ROOT)
+        self.log_msg("æ­£åœ¨æ‰«æ %s ..." % DRV_ROOT)
         self.root.update_idletasks()
         found = scan_nvxdapix()
 
-        # ²éÑ¯µ±Ç°Êµ¼Ê¼ÓÔØµÄ NVIDIA ÏÔ¿¨Çı¶¯ (¶à¿¨È«²é), ÓÃÓÚÄ¬ÈÏ¹´Ñ¡
-        self.log_msg("ÕıÔÚÍ¨¹ı WMI ²éÑ¯µ±Ç°ÏÔ¿¨Êµ¼Ê¼ÓÔØµÄÇı¶¯...")
+        # æŸ¥è¯¢å½“å‰å®é™…åŠ è½½çš„ NVIDIA æ˜¾å¡é©±åŠ¨ (å¤šå¡å…¨æŸ¥), ç”¨äºé»˜è®¤å‹¾é€‰
+        self.log_msg("æ­£åœ¨é€šè¿‡ WMI æŸ¥è¯¢å½“å‰æ˜¾å¡å®é™…åŠ è½½çš„é©±åŠ¨...")
         active = get_active_nvidia_drivers()
         active_infs = set()
         for dev, inf in active:
@@ -477,31 +477,31 @@ class PatcherApp:
                 active_infs.add(n.lower())
         if active:
             for dev, inf in active:
-                self.log_msg("  ¼ì²âµ½ÏÔ¿¨: %s (Çı¶¯ inf: %s)" % (dev, inf or "Î´Öª"))
+                self.log_msg("  æ£€æµ‹åˆ°æ˜¾å¡: %s (é©±åŠ¨ inf: %s)" % (dev, inf or "æœªçŸ¥"))
         else:
-            self.log_msg("  Î´¼ì²âµ½ÒÑ¼ÓÔØµÄ NVIDIA ÏÔ¿¨Çı¶¯, ²»×Ô¶¯¹´Ñ¡¡£")
+            self.log_msg("  æœªæ£€æµ‹åˆ°å·²åŠ è½½çš„ NVIDIA æ˜¾å¡é©±åŠ¨, ä¸è‡ªåŠ¨å‹¾é€‰ã€‚")
 
         self.listbox.delete(0, "end")
         self.dll_vars.clear()
         for path, inf, ts in found:
             label = "[%s.inf]  %s\n    %s" % (inf, ts, path)
             self.listbox.insert("end", label)
-            # inf ÃûÓëµ±Ç°¼ÓÔØÇı¶¯±È¶Ô, Æ¥ÅäÔòÄ¬ÈÏ¹´Ñ¡
+            # inf åä¸å½“å‰åŠ è½½é©±åŠ¨æ¯”å¯¹, åŒ¹é…åˆ™é»˜è®¤å‹¾é€‰
             matched = inf.lower() in active_infs
             self.dll_vars[path] = tk.BooleanVar(value=matched)
             if matched:
-                self.log_msg("¸ù¾İÇı¶¯ %s£¬Ä¿Ç°ÏÔ¿¨Êµ¼ÊÊ¹ÓÃµÄÇı¶¯Â·¾¶Îª %s" % (
+                self.log_msg("æ ¹æ®é©±åŠ¨ %sï¼Œç›®å‰æ˜¾å¡å®é™…ä½¿ç”¨çš„é©±åŠ¨è·¯å¾„ä¸º %s" % (
                     self._match_dev(inf, active), path))
-        self.log_msg("É¨ÃèÍê³É, ¹²ÕÒµ½ %d ¸ö nvxdapix.dll¡£" % len(found))
+        self.log_msg("æ‰«æå®Œæˆ, å…±æ‰¾åˆ° %d ä¸ª nvxdapix.dllã€‚" % len(found))
         if not found:
             messagebox.showwarning(
-                "Î´ÕÒµ½",
-                "Î´ÔÚ %s ÕÒµ½ nvxdapix.dll¡£\nÇëÈ·ÈÏÒÑ°²×° NVIDIA vGPU (GRID) Çı¶¯¡£" % DRV_ROOT,
+                "æœªæ‰¾åˆ°",
+                "æœªåœ¨ %s æ‰¾åˆ° nvxdapix.dllã€‚\nè¯·ç¡®è®¤å·²å®‰è£… NVIDIA vGPU (GRID) é©±åŠ¨ã€‚" % DRV_ROOT,
             )
         self._update_selected_count()
 
     def _match_dev(self, inf, active):
-        """·µ»ØÓë inf Æ¥ÅäµÄÏÔ¿¨Ãû³Æ (ÓÃÓÚÈÕÖ¾)¡£"""
+        """è¿”å›ä¸ inf åŒ¹é…çš„æ˜¾å¡åç§° (ç”¨äºæ—¥å¿—)ã€‚"""
         for dev, ainf in active:
             n = (ainf or "")[:-4] if (ainf or "").endswith(".inf") else ainf
             if n.lower() == inf.lower():
@@ -514,7 +514,7 @@ class PatcherApp:
         self._update_selected_count()
 
     def _on_listbox_click(self, event):
-        """µã»÷ listbox ÏîÄ¿Ê±ÇĞ»»¶ÔÓ¦ DLL µÄ¹´Ñ¡×´Ì¬¡£"""
+        """ç‚¹å‡» listbox é¡¹ç›®æ—¶åˆ‡æ¢å¯¹åº” DLL çš„å‹¾é€‰çŠ¶æ€ã€‚"""
         if not (0 <= event.widget.nearest(event.y) < event.widget.size()):
             return
         idx = event.widget.nearest(event.y)
@@ -526,11 +526,11 @@ class PatcherApp:
 
     def _update_selected_count(self):
         n = sum(1 for v in self.dll_vars.values() if v.get())
-        self.selected_lbl.config(text="ÒÑÑ¡: %d" % n)
+        self.selected_lbl.config(text="å·²é€‰: %d" % n)
         self.run_btn.config(state="normal" if n > 0 else "disabled")
 
     def selected_paths(self):
-        # ÁĞ±íË³ĞòÓë dll_vars Ò»ÖÂ (²åÈëË³Ğò)
+        # åˆ—è¡¨é¡ºåºä¸ dll_vars ä¸€è‡´ (æ’å…¥é¡ºåº)
         order = []
         for i in range(self.listbox.size()):
             sel = self.listbox.get(i)
@@ -539,11 +539,11 @@ class PatcherApp:
                 order.append(path)
         return order
 
-    # ---------------- Ö¤Êé ----------------
+    # ---------------- è¯ä¹¦ ----------------
     def choose_cert_file(self):
         p = filedialog.askopenfilename(
-            title="Ñ¡Ôñ¸ùÖ¤ÊéÎÄ¼ş",
-            filetypes=[("PEM Ö¤Êé", "*.pem *.crt *.cer"), ("ËùÓĞÎÄ¼ş", "*.*")],
+            title="é€‰æ‹©æ ¹è¯ä¹¦æ–‡ä»¶",
+            filetypes=[("PEM è¯ä¹¦", "*.pem *.crt *.cer"), ("æ‰€æœ‰æ–‡ä»¶", "*.*")],
         )
         if not p:
             return
@@ -551,7 +551,7 @@ class PatcherApp:
             with open(p, "r", encoding="utf-8", errors="replace") as f:
                 content = f.read()
         except Exception as e:
-            messagebox.showerror("¶ÁÈ¡Ê§°Ü", "ÎŞ·¨¶ÁÈ¡ÎÄ¼ş:\n%s" % e)
+            messagebox.showerror("è¯»å–å¤±è´¥", "æ— æ³•è¯»å–æ–‡ä»¶:\n%s" % e)
             return
         self.cert_text.delete("1.0", "end")
         self.cert_text.insert("1.0", content)
@@ -562,56 +562,56 @@ class PatcherApp:
         text = self.cert_text.get("1.0", "end")
         ok, err, _ = validate_cert_text(text)
         if ok:
-            self.cert_status.config(text="Ö¤ÊéĞ£ÑéÍ¨¹ı", foreground="green")
+            self.cert_status.config(text="è¯ä¹¦æ ¡éªŒé€šè¿‡", foreground="green")
             self._last_norm = _
         else:
-            self.cert_status.config(text="Ğ£ÑéÊ§°Ü: " + err, foreground="red")
+            self.cert_status.config(text="æ ¡éªŒå¤±è´¥: " + err, foreground="red")
             self._last_norm = None
         return ok
 
-    # ---------------- Ö´ĞĞ ----------------
+    # ---------------- æ‰§è¡Œ ----------------
     def run_patch(self):
-        # 1) Ğ£ÑéÖ¤Êé
+        # 1) æ ¡éªŒè¯ä¹¦
         text = self.cert_text.get("1.0", "end")
         ok, err, normalized = validate_cert_text(text)
         if not ok:
-            self.cert_status.config(text="Ğ£ÑéÊ§°Ü: " + err, foreground="red")
-            messagebox.showerror("Ö¤ÊéÎŞĞ§", "´ò²¹¶¡Ç°±ØĞëÏÈÍ¨¹ıÖ¤ÊéĞ£Ñé¡£\n\n" + err)
+            self.cert_status.config(text="æ ¡éªŒå¤±è´¥: " + err, foreground="red")
+            messagebox.showerror("è¯ä¹¦æ— æ•ˆ", "æ‰“è¡¥ä¸å‰å¿…é¡»å…ˆé€šè¿‡è¯ä¹¦æ ¡éªŒã€‚\n\n" + err)
             return
 
         paths = self.selected_paths()
         if not paths:
             return
 
-        # 2) Ğ´ÁÙÊ±Ö¤Êéµ½³ÌĞòÍ¬Â·¾¶µÄ temp ÎÄ¼ş¼Ğ
+        # 2) å†™ä¸´æ—¶è¯ä¹¦åˆ°ç¨‹åºåŒè·¯å¾„çš„ temp æ–‡ä»¶å¤¹
         tdir = temp_dir()
         cert_tmp = os.path.join(tdir, "gridd_rootcert_%d.pem" % int(datetime.now().timestamp() % 10**8))
         try:
             with open(cert_tmp, "w", encoding="utf-8", newline="\n") as f:
                 f.write(normalized)
         except Exception as e:
-            messagebox.showerror("Ğ´ÈëÊ§°Ü", "ÎŞ·¨Ğ´ÈëÁÙÊ±Ö¤Êé:\n%s" % e)
+            messagebox.showerror("å†™å…¥å¤±è´¥", "æ— æ³•å†™å…¥ä¸´æ—¶è¯ä¹¦:\n%s" % e)
             return
 
         if not os.path.exists(PATCHER_EXE):
             messagebox.showerror(
-                "È±ÉÙ¹¤¾ß",
-                "Î´ÕÒµ½ gridd-unlock-patcher.exe¡£\nÇë½«Æä·Åµ½Ö÷³ÌĞòÍ¬Ä¿Â¼:\n%s" % app_dir(),
+                "ç¼ºå°‘å·¥å…·",
+                "æœªæ‰¾åˆ° gridd-unlock-patcher.exeã€‚\nè¯·å°†å…¶æ”¾åˆ°ä¸»ç¨‹åºåŒç›®å½•:\n%s" % app_dir(),
             )
             return
 
-        # ´´½¨±¾´Î±¸·İ»á»°Ä¿Â¼ (unix Ê±¼ä´Á)
+        # åˆ›å»ºæœ¬æ¬¡å¤‡ä»½ä¼šè¯ç›®å½• (unix æ—¶é—´æˆ³)
         session_dir, ts = backup_session_dir()
         self.log_msg("=" * 60)
-        self.log_msg("±¸·İ»á»°Ä¿Â¼: %s" % session_dir)
-        self.log_msg("¿ªÊ¼´¦Àí %d ¸ö DLL, Ö¤Êé: %s" % (len(paths), cert_tmp))
-        # Á¢¼´½ûÓÃ°´Å¥ + ÌáÊ¾´¦ÀíÖĞ (Ö÷Ïß³Ì)
+        self.log_msg("å¤‡ä»½ä¼šè¯ç›®å½•: %s" % session_dir)
+        self.log_msg("å¼€å§‹å¤„ç† %d ä¸ª DLL, è¯ä¹¦: %s" % (len(paths), cert_tmp))
+        # ç«‹å³ç¦ç”¨æŒ‰é’® + æç¤ºå¤„ç†ä¸­ (ä¸»çº¿ç¨‹)
         self.run_btn.config(state="disabled")
         self.restore_btn.config(state="disabled")
-        self.progress.config(text="´¦ÀíÖĞ...", foreground="orange")
+        self.progress.config(text="å¤„ç†ä¸­...", foreground="orange")
         self.root.update()
 
-        # ºÄÊ±²Ù×÷·Åµ½×ÓÏß³Ì, ±ÜÃâ¶³½á UI
+        # è€—æ—¶æ“ä½œæ”¾åˆ°å­çº¿ç¨‹, é¿å…å†»ç»“ UI
         t = threading.Thread(
             target=self._patch_worker,
             args=(paths, cert_tmp, session_dir, tdir),
@@ -620,109 +620,109 @@ class PatcherApp:
         t.start()
 
     def _patch_worker(self, paths, cert_tmp, session_dir, tdir):
-        """×ÓÏß³Ì: Ö´ĞĞËùÓĞºÄÊ±²Ù×÷ (±¸·İ/´ò²¹¶¡/Í£·şÎñ/¸²¸Ç)¡£"""
+        """å­çº¿ç¨‹: æ‰§è¡Œæ‰€æœ‰è€—æ—¶æ“ä½œ (å¤‡ä»½/æ‰“è¡¥ä¸/åœæœåŠ¡/è¦†ç›–)ã€‚"""
         manifest_entries = []
         total = len(paths)
-        # ½«Ñ¡ÖĞµÄ DLL ¸´ÖÆµ½ temp ÎÄ¼ş¼Ğ, ÓÃÏà¶ÔÂ·¾¶Ö´ĞĞ patcher
+        # å°†é€‰ä¸­çš„ DLL å¤åˆ¶åˆ° temp æ–‡ä»¶å¤¹, ç”¨ç›¸å¯¹è·¯å¾„æ‰§è¡Œ patcher
         tmp_paths = []
         for i, path in enumerate(paths, 1):
             tmp_name = "nvxdapix_%d.dll" % i
             tmp_dll = os.path.join(tdir, tmp_name)
-            self.log_msg("¸´ÖÆ [%d/%d] %s -> %s" % (i, total, os.path.basename(path), tmp_dll))
-            r = self._run_cmd(["cmd", "/c", "copy", "/y", path, tmp_dll], "¸´ÖÆ´ı´ò²¹¶¡ DLL µ½ temp")
+            self.log_msg("å¤åˆ¶ [%d/%d] %s -> %s" % (i, total, os.path.basename(path), tmp_dll))
+            r = self._run_cmd(["cmd", "/c", "copy", "/y", path, tmp_dll], "å¤åˆ¶å¾…æ‰“è¡¥ä¸ DLL åˆ° temp")
             if r != 0 or not os.path.exists(tmp_dll):
-                self.log_msg("[´íÎó] ¸´ÖÆÊ§°Ü (·µ»ØÂë %s), Ìø¹ı¸Ã DLL¡£" % r)
+                self.log_msg("[é”™è¯¯] å¤åˆ¶å¤±è´¥ (è¿”å›ç  %s), è·³è¿‡è¯¥ DLLã€‚" % r)
                 continue
             tmp_paths.append((path, tmp_dll))
         if not tmp_paths:
-            self.log_msg("[´íÎó] Ã»ÓĞ¿É´¦ÀíµÄ DLL, ÖÕÖ¹¡£")
+            self.log_msg("[é”™è¯¯] æ²¡æœ‰å¯å¤„ç†çš„ DLL, ç»ˆæ­¢ã€‚")
         for idx, (path, tmp_dll) in enumerate(tmp_paths, 1):
             self._ui(lambda i=idx: self.progress.config(
-                text="´¦Àí %d/%d ..." % (i, len(tmp_paths)), foreground="orange"))
+                text="å¤„ç† %d/%d ..." % (i, len(tmp_paths)), foreground="orange"))
             self._patch_one(path, tmp_dll, cert_tmp, session_dir=session_dir,
                             manifest_entries=manifest_entries)
-        # Ğ´ manifest
+        # å†™ manifest
         if manifest_entries:
             write_manifest(session_dir, manifest_entries)
-            self.log_msg("[±¸·İ] ±¾´Î¹²±¸·İ %d ¸ö DLL, Çåµ¥ÒÑĞ´Èë %s" % (
+            self.log_msg("[å¤‡ä»½] æœ¬æ¬¡å…±å¤‡ä»½ %d ä¸ª DLL, æ¸…å•å·²å†™å…¥ %s" % (
                 len(manifest_entries), os.path.join(session_dir, "manifest.json")))
-        # »Øµ½Ö÷Ïß³Ì¸üĞÂ UI ×´Ì¬
+        # å›åˆ°ä¸»çº¿ç¨‹æ›´æ–° UI çŠ¶æ€
         def _done():
-            self.progress.config(text="È«²¿Íê³É", foreground="green")
+            self.progress.config(text="å…¨éƒ¨å®Œæˆ", foreground="green")
             self.run_btn.config(state="normal")
             self.restore_btn.config(state="normal")
             self._refresh_backup_list()
-            # Íê³ÉÌáÊ¾Ö»Ğ´ÈÕÖ¾ + ½ø¶È±êÇ©, ²»ÓÃÄ£Ì¬µ¯´° (±ÜÃâ×èÈû UI)
+            # å®Œæˆæç¤ºåªå†™æ—¥å¿— + è¿›åº¦æ ‡ç­¾, ä¸ç”¨æ¨¡æ€å¼¹çª— (é¿å…é˜»å¡ UI)
             self.log_msg("=" * 60)
-            self.log_msg("[Íê³É] ËùÓĞ²Ù×÷½áÊø¡£ÇëÖØÆôĞéÄâ»úÊ¹²¹¶¡ÉúĞ§¡£")
-            self.log_msg("       Èô·şÎñÒì³£, ¿ÉÔÚÉÏ·½¡¾±¸·İ¡¿ÁĞ±íÑ¡ÖĞ»á»°µã¡¾»Ö¸´Ñ¡ÖĞ±¸·İ¡¿»Ø¹ö¡£")
+            self.log_msg("[å®Œæˆ] æ‰€æœ‰æ“ä½œç»“æŸã€‚è¯·é‡å¯è™šæ‹Ÿæœºä½¿è¡¥ä¸ç”Ÿæ•ˆã€‚")
+            self.log_msg("       è‹¥æœåŠ¡å¼‚å¸¸, å¯åœ¨ä¸Šæ–¹ã€å¤‡ä»½ã€‘åˆ—è¡¨é€‰ä¸­ä¼šè¯ç‚¹ã€æ¢å¤é€‰ä¸­å¤‡ä»½ã€‘å›æ»šã€‚")
             self.log_msg("=" * 60)
         self._ui(_done)
 
     def _patch_one(self, dll_path, tmp_dll, cert_tmp, session_dir=None, manifest_entries=None):
         self.log_msg("-" * 60)
-        self.log_msg("´¦Àí: %s" % dll_path)
-        self.log_msg("temp ¸±±¾: %s" % tmp_dll)
+        self.log_msg("å¤„ç†: %s" % dll_path)
+        self.log_msg("temp å‰¯æœ¬: %s" % tmp_dll)
 
-        # ±¸·İÔ­Ê¼ dll µ½»á»°Ä¿Â¼ (±£Áô DriverStore Ïà¶ÔÂ·¾¶½á¹¹)
+        # å¤‡ä»½åŸå§‹ dll åˆ°ä¼šè¯ç›®å½• (ä¿ç•™ DriverStore ç›¸å¯¹è·¯å¾„ç»“æ„)
         if session_dir and manifest_entries is not None:
             rel = backup_one_dll(dll_path, session_dir, log=self.log_msg)
             if rel is None:
-                self.log_msg("[´íÎó] ±¸·İÊ§°Ü, Ìø¹ı¸Ã DLL¡£")
+                self.log_msg("[é”™è¯¯] å¤‡ä»½å¤±è´¥, è·³è¿‡è¯¥ DLLã€‚")
                 return
             manifest_entries.append((dll_path, rel))
         else:
-            # ¶µµ×: ÎŞ»á»°Ä¿Â¼Ê±ÈÔ×ö .bak
+            # å…œåº•: æ— ä¼šè¯ç›®å½•æ—¶ä»åš .bak
             bak = dll_path + ".bak"
-            self._run_cmd(["cmd", "/c", "copy", "/y", dll_path, bak], "±¸·İÔ­ DLL")
+            self._run_cmd(["cmd", "/c", "copy", "/y", dll_path, bak], "å¤‡ä»½åŸ DLL")
             if not os.path.exists(bak):
-                self.log_msg("[´íÎó] ±¸·İÊ§°Ü, Ìø¹ı¸Ã DLL¡£")
+                self.log_msg("[é”™è¯¯] å¤‡ä»½å¤±è´¥, è·³è¿‡è¯¥ DLLã€‚")
                 return
 
-        # ¶Ô temp ¸±±¾´ò²¹¶¡: ÇĞ»»¹¤×÷Ä¿Â¼µ½³ÌĞòÍ¬Â·¾¶, ÓÃÏà¶ÔÂ·¾¶Ö´ĞĞ
-        # (¹æ±Ü¾ø¶ÔÂ·¾¶º¬ÖĞÎÄ/¿Õ¸ñµ¼ÖÂµÄ¼æÈİĞÔÎÊÌâ, Í¬Ê±±ãÓÚÅÅ²é)
+        # å¯¹ temp å‰¯æœ¬æ‰“è¡¥ä¸: åˆ‡æ¢å·¥ä½œç›®å½•åˆ°ç¨‹åºåŒè·¯å¾„, ç”¨ç›¸å¯¹è·¯å¾„æ‰§è¡Œ
+        # (è§„é¿ç»å¯¹è·¯å¾„å«ä¸­æ–‡/ç©ºæ ¼å¯¼è‡´çš„å…¼å®¹æ€§é—®é¢˜, åŒæ—¶ä¾¿äºæ’æŸ¥)
         tdir = os.path.dirname(tmp_dll)
         tmp_rel = os.path.basename(tmp_dll)
         cert_rel = os.path.basename(cert_tmp)
         cmd = [os.path.basename(PATCHER_EXE), "-g", tmp_rel, "-c", cert_rel]
-        self.log_msg("µ÷ÓÃ (¹¤×÷Ä¿Â¼ %s): %s" % (tdir, " ".join(cmd)))
-        r = self._run_cmd(cmd, "Ö´ĞĞ gridd-unlock-patcher", cwd=tdir)
+        self.log_msg("è°ƒç”¨ (å·¥ä½œç›®å½• %s): %s" % (tdir, " ".join(cmd)))
+        r = self._run_cmd(cmd, "æ‰§è¡Œ gridd-unlock-patcher", cwd=tdir)
         if r != 0 or not os.path.exists(tmp_dll):
             if r == 0xC0000005:
-                self.log_msg("[´íÎó] ²¹¶¡³ÌĞò±ÀÀ£ (0xC0000005 ÄÚ´æ·ÃÎÊÎ¥¹æ)¡£")
-                self.log_msg("       ¸Ã nvxdapix.dll ¿ÉÄÜ²»ÊÇ GRID/vGPU Çı¶¯°æ±¾, ²¹¶¡¹¤¾ß²»Ö§³Ö´ËÀàĞÍ¡£")
-                self.log_msg("       ÇëÈ·ÈÏÄ¿±êÏÔ¿¨Îª vGPU »·¾³ (·Ç×ÀÃæ GeForce/Tesla Çı¶¯)¡£")
+                self.log_msg("[é”™è¯¯] è¡¥ä¸ç¨‹åºå´©æºƒ (0xC0000005 å†…å­˜è®¿é—®è¿è§„)ã€‚")
+                self.log_msg("       è¯¥ nvxdapix.dll å¯èƒ½ä¸æ˜¯ GRID/vGPU é©±åŠ¨ç‰ˆæœ¬, è¡¥ä¸å·¥å…·ä¸æ”¯æŒæ­¤ç±»å‹ã€‚")
+                self.log_msg("       è¯·ç¡®è®¤ç›®æ ‡æ˜¾å¡ä¸º vGPU ç¯å¢ƒ (éæ¡Œé¢ GeForce/Tesla é©±åŠ¨)ã€‚")
             else:
-                self.log_msg("[´íÎó] ²¹¶¡³ÌĞòÖ´ĞĞÊ§°Ü (·µ»ØÂë %s), Ìø¹ı¸²¸Ç¡£" % r)
+                self.log_msg("[é”™è¯¯] è¡¥ä¸ç¨‹åºæ‰§è¡Œå¤±è´¥ (è¿”å›ç  %s), è·³è¿‡è¦†ç›–ã€‚" % r)
             self._cleanup(tmp_dll)
             return
 
-        # Í£·şÎñ
-        self._run_cmd(["cmd", "/c", "net", "stop", SVC_NAME], "Í£Ö¹·şÎñ " + SVC_NAME,
+        # åœæœåŠ¡
+        self._run_cmd(["cmd", "/c", "net", "stop", SVC_NAME], "åœæ­¢æœåŠ¡ " + SVC_NAME,
                       allow_fail=True)
 
-        # ¶µµ×: Í£·şÎñºóÈÔ¿ÉÄÜÓĞÆäËû½ø³ÌÕ¼ÓÃ¸Ã DLL, ÓÃ psutil Ç¿É± (¶ÔÆë ps1 Âß¼­)
-        self.log_msg("  ¼ì²éÊÇ·ñÓĞÆäËû½ø³ÌÈÔÕ¼ÓÃ¸Ã DLL ...")
+        # å…œåº•: åœæœåŠ¡åä»å¯èƒ½æœ‰å…¶ä»–è¿›ç¨‹å ç”¨è¯¥ DLL, ç”¨ psutil å¼ºæ€ (å¯¹é½ ps1 é€»è¾‘)
+        self.log_msg("  æ£€æŸ¥æ˜¯å¦æœ‰å…¶ä»–è¿›ç¨‹ä»å ç”¨è¯¥ DLL ...")
         n = kill_processes_using_dll(dll_path, log=self.log_msg)
         if n:
-            self.log_msg("  ÒÑÇ¿É± %d ¸öÈÔÕ¼ÓÃ DLL µÄ½ø³Ì¡£" % n)
+            self.log_msg("  å·²å¼ºæ€ %d ä¸ªä»å ç”¨ DLL çš„è¿›ç¨‹ã€‚" % n)
         else:
-            self.log_msg("  ÎŞÆäËû½ø³ÌÕ¼ÓÃ, ¼ÌĞø¡£")
+            self.log_msg("  æ— å…¶ä»–è¿›ç¨‹å ç”¨, ç»§ç»­ã€‚")
 
         # takeown + icacls
-        self._run_cmd(["cmd", "/c", "takeown", "/f", dll_path], "»ñÈ¡ËùÓĞÈ¨", allow_fail=True)
+        self._run_cmd(["cmd", "/c", "takeown", "/f", dll_path], "è·å–æ‰€æœ‰æƒ", allow_fail=True)
         self._run_cmd(["cmd", "/c", "icacls", dll_path, "/grant", "Administrators:F"],
-                      "ÊÚÓè¹ÜÀíÔ±ÍêÈ«¿ØÖÆ", allow_fail=True)
+                      "æˆäºˆç®¡ç†å‘˜å®Œå…¨æ§åˆ¶", allow_fail=True)
 
-        # ¸²¸Ç
-        rc = self._run_cmd(["cmd", "/c", "copy", "/y", tmp_dll, dll_path], "¸²¸ÇÄ¿±ê DLL")
+        # è¦†ç›–
+        rc = self._run_cmd(["cmd", "/c", "copy", "/y", tmp_dll, dll_path], "è¦†ç›–ç›®æ ‡ DLL")
         if rc != 0:
-            self.log_msg("[´íÎó] ¸²¸ÇÊ§°Ü (·µ»ØÂë %s)¡£" % rc)
+            self.log_msg("[é”™è¯¯] è¦†ç›–å¤±è´¥ (è¿”å›ç  %s)ã€‚" % rc)
         else:
-            self.log_msg("[³É¹¦] ÒÑ¸²¸Ç %s" % dll_path)
+            self.log_msg("[æˆåŠŸ] å·²è¦†ç›– %s" % dll_path)
 
-        # Æğ·şÎñ
-        self._run_cmd(["cmd", "/c", "net", "start", SVC_NAME], "ÖØÆô·şÎñ " + SVC_NAME,
+        # èµ·æœåŠ¡
+        self._run_cmd(["cmd", "/c", "net", "start", SVC_NAME], "é‡å¯æœåŠ¡ " + SVC_NAME,
                       allow_fail=True)
 
         self._cleanup(tmp_dll)
@@ -734,7 +734,7 @@ class PatcherApp:
         except Exception:
             pass
 
-    # ---------------- ÃüÁîÖ´ĞĞ ----------------
+    # ---------------- å‘½ä»¤æ‰§è¡Œ ----------------
     def _run_cmd(self, cmd, desc, allow_fail=False, cwd=None):
         self.log_msg("  >> %s" % desc)
         try:
@@ -749,15 +749,15 @@ class PatcherApp:
                 for ln in err.splitlines():
                     self.log_msg("     ! " + ln)
             if p.returncode != 0 and not allow_fail:
-                self.log_msg("     [Ê§°Ü] ·µ»ØÂë %d" % p.returncode)
+                self.log_msg("     [å¤±è´¥] è¿”å›ç  %d" % p.returncode)
             return p.returncode
         except Exception as e:
-            self.log_msg("     [Òì³£] %s" % e)
+            self.log_msg("     [å¼‚å¸¸] %s" % e)
             return -1
 
-    # ---------------- ÈÕÖ¾ ----------------
+    # ---------------- æ—¥å¿— ----------------
     def _poll_ui_queue(self):
-        """Ö÷Ïß³ÌÂÖÑ¯ UI ¶ÓÁĞ, Ö´ĞĞ×ÓÏß³ÌÌá½»µÄ UI ²Ù×÷¡£"""
+        """ä¸»çº¿ç¨‹è½®è¯¢ UI é˜Ÿåˆ—, æ‰§è¡Œå­çº¿ç¨‹æäº¤çš„ UI æ“ä½œã€‚"""
         try:
             while True:
                 fn = self.ui_queue.get_nowait()
@@ -770,14 +770,14 @@ class PatcherApp:
         self.root.after(50, self._poll_ui_queue)
 
     def _ui(self, fn):
-        """Ïß³Ì°²È«µÄ UI µ÷¶È: ×ÓÏß³ÌÈë¶Ó, Ö÷Ïß³ÌÂÖÑ¯Ö´ĞĞ¡£"""
+        """çº¿ç¨‹å®‰å…¨çš„ UI è°ƒåº¦: å­çº¿ç¨‹å…¥é˜Ÿ, ä¸»çº¿ç¨‹è½®è¯¢æ‰§è¡Œã€‚"""
         if threading.current_thread() is threading.main_thread():
             fn()
         else:
             self.ui_queue.put(fn)
 
     def log_msg(self, msg):
-        """Ïß³Ì°²È«ÈÕÖ¾: ×ÓÏß³ÌÈë¶Ó, Ö÷Ïß³ÌÖ´ĞĞ¡£"""
+        """çº¿ç¨‹å®‰å…¨æ—¥å¿—: å­çº¿ç¨‹å…¥é˜Ÿ, ä¸»çº¿ç¨‹æ‰§è¡Œã€‚"""
         def _do():
             self.log.config(state="normal")
             self.log.insert("end", msg + "\n")
@@ -788,7 +788,7 @@ class PatcherApp:
     def open_log_dir(self):
         os.startfile(tempfile.gettempdir())
 
-    # ---------------- ±¸·İ / »Ö¸´ ----------------
+    # ---------------- å¤‡ä»½ / æ¢å¤ ----------------
     def _refresh_backup_list(self, select_first=True):
         sessions = list_backup_sessions()
         self._sessions = {}
@@ -817,97 +817,97 @@ class PatcherApp:
     def run_restore(self):
         session_dir = self._selected_session_dir()
         if not session_dir:
-            messagebox.showwarning("ÌáÊ¾", "ÇëÏÈÔÚ±¸·İÁĞ±íÑ¡ÔñÒ»¸öÒª»Ö¸´µÄ±¸·İ¡£")
+            messagebox.showwarning("æç¤º", "è¯·å…ˆåœ¨å¤‡ä»½åˆ—è¡¨é€‰æ‹©ä¸€ä¸ªè¦æ¢å¤çš„å¤‡ä»½ã€‚")
             return
         entries = read_manifest(session_dir)
         if not entries:
-            messagebox.showerror("´íÎó", "¸Ã±¸·İÄ¿Â¼ÎŞÓĞĞ§Çåµ¥ (manifest.json)¡£")
+            messagebox.showerror("é”™è¯¯", "è¯¥å¤‡ä»½ç›®å½•æ— æœ‰æ•ˆæ¸…å• (manifest.json)ã€‚")
             return
-        # ¼ì²é±¸·İÎÄ¼şÊÇ·ñ¶¼ÔÚ
+        # æ£€æŸ¥å¤‡ä»½æ–‡ä»¶æ˜¯å¦éƒ½åœ¨
         missing = [orig for orig, rel in entries
                    if not os.path.exists(os.path.join(session_dir, rel))]
         if missing:
             messagebox.showerror(
-                "±¸·İ²»ÍêÕû",
-                "ÒÔÏÂÔ­Ê¼ DLL µÄ±¸·İÎÄ¼şÈ±Ê§, ÎŞ·¨ÍêÕû»Ö¸´:\n\n"
+                "å¤‡ä»½ä¸å®Œæ•´",
+                "ä»¥ä¸‹åŸå§‹ DLL çš„å¤‡ä»½æ–‡ä»¶ç¼ºå¤±, æ— æ³•å®Œæ•´æ¢å¤:\n\n"
                 + "\n".join(missing),
             )
             return
 
         if not messagebox.askyesno(
-                "È·ÈÏ»Ö¸´",
-                "¼´½«´Ó±¸·İ»Ö¸´µ½ÒÔÏÂ %d ¸öÔ­Ê¼Î»ÖÃ (»á¸²¸Çµ±Ç°ÎÄ¼ş):\n\n%s\n\n"
-                "»Ö¸´»áÍ£Ö¹ÏÔÊ¾·şÎñ²¢ÖØÆô, È·ÈÏ¼ÌĞø?" % (
+                "ç¡®è®¤æ¢å¤",
+                "å³å°†ä»å¤‡ä»½æ¢å¤åˆ°ä»¥ä¸‹ %d ä¸ªåŸå§‹ä½ç½® (ä¼šè¦†ç›–å½“å‰æ–‡ä»¶):\n\n%s\n\n"
+                "æ¢å¤ä¼šåœæ­¢æ˜¾ç¤ºæœåŠ¡å¹¶é‡å¯, ç¡®è®¤ç»§ç»­?" % (
                     len(entries), "\n".join(o for o, _ in entries)),
         ):
             return
 
         self.log_msg("=" * 60)
-        self.log_msg("[»Ö¸´] ´Ó»á»° %s »Ö¸´ %d ¸ö DLL" % (session_dir, len(entries)))
-        # Á¢¼´½ûÓÃ + ÌáÊ¾ (Ö÷Ïß³Ì)
+        self.log_msg("[æ¢å¤] ä»ä¼šè¯ %s æ¢å¤ %d ä¸ª DLL" % (session_dir, len(entries)))
+        # ç«‹å³ç¦ç”¨ + æç¤º (ä¸»çº¿ç¨‹)
         self.run_btn.config(state="disabled")
         self.restore_btn.config(state="disabled")
-        self.progress.config(text="»Ö¸´ÖĞ...", foreground="orange")
+        self.progress.config(text="æ¢å¤ä¸­...", foreground="orange")
         self.root.update()
 
-        # ºÄÊ±²Ù×÷·Å×ÓÏß³Ì
+        # è€—æ—¶æ“ä½œæ”¾å­çº¿ç¨‹
         threading.Thread(target=self._restore_worker, args=(session_dir, entries),
                          daemon=True).start()
 
     def _restore_worker(self, session_dir, entries):
-        """×ÓÏß³Ì: Ö´ĞĞ»Ö¸´µÄËùÓĞºÄÊ±²Ù×÷¡£"""
-        # Í£·şÎñ (Ò»´Î¼´¿É, »Ö¸´ÍêÍ³Ò»ÖØÆô)
-        self._run_cmd(["cmd", "/c", "net", "stop", SVC_NAME], "Í£Ö¹·şÎñ " + SVC_NAME,
+        """å­çº¿ç¨‹: æ‰§è¡Œæ¢å¤çš„æ‰€æœ‰è€—æ—¶æ“ä½œã€‚"""
+        # åœæœåŠ¡ (ä¸€æ¬¡å³å¯, æ¢å¤å®Œç»Ÿä¸€é‡å¯)
+        self._run_cmd(["cmd", "/c", "net", "stop", SVC_NAME], "åœæ­¢æœåŠ¡ " + SVC_NAME,
                       allow_fail=True)
         for orig, rel in entries:
             self._restore_one(orig, os.path.join(session_dir, rel))
-        self._run_cmd(["cmd", "/c", "net", "start", SVC_NAME], "ÖØÆô·şÎñ " + SVC_NAME,
+        self._run_cmd(["cmd", "/c", "net", "start", SVC_NAME], "é‡å¯æœåŠ¡ " + SVC_NAME,
                       allow_fail=True)
         def _done():
-            self.progress.config(text="»Ö¸´Íê³É", foreground="green")
+            self.progress.config(text="æ¢å¤å®Œæˆ", foreground="green")
             self.run_btn.config(state="normal")
             self.restore_btn.config(state="normal")
             self.log_msg("=" * 60)
-            self.log_msg("[»Ö¸´Íê³É] ÒÑ´Ó±¸·İ»Ö¸´ %d ¸ö DLL¡£ÇëÖØÆôĞéÄâ»úÊ¹»Ö¸´ÉúĞ§¡£" % len(entries))
+            self.log_msg("[æ¢å¤å®Œæˆ] å·²ä»å¤‡ä»½æ¢å¤ %d ä¸ª DLLã€‚è¯·é‡å¯è™šæ‹Ÿæœºä½¿æ¢å¤ç”Ÿæ•ˆã€‚" % len(entries))
             self.log_msg("=" * 60)
         self._ui(_done)
 
     def _restore_one(self, original_path, backup_file):
         self.log_msg("-" * 60)
-        self.log_msg("»Ö¸´: %s" % original_path)
+        self.log_msg("æ¢å¤: %s" % original_path)
         if not os.path.exists(backup_file):
-            self.log_msg("[´íÎó] ±¸·İÎÄ¼ş²»´æÔÚ: %s, Ìø¹ı¡£" % backup_file)
+            self.log_msg("[é”™è¯¯] å¤‡ä»½æ–‡ä»¶ä¸å­˜åœ¨: %s, è·³è¿‡ã€‚" % backup_file)
             return
-        # ¶µµ×: »Ö¸´Ç°ÔÙÇ¿É±Õ¼ÓÃ½ø³Ì
-        self.log_msg("  ¼ì²éÊÇ·ñÓĞ½ø³ÌÈÔÕ¼ÓÃÄ¿±ê DLL ...")
+        # å…œåº•: æ¢å¤å‰å†å¼ºæ€å ç”¨è¿›ç¨‹
+        self.log_msg("  æ£€æŸ¥æ˜¯å¦æœ‰è¿›ç¨‹ä»å ç”¨ç›®æ ‡ DLL ...")
         kill_processes_using_dll(original_path, log=self.log_msg)
         # takeown + icacls
-        self._run_cmd(["cmd", "/c", "takeown", "/f", original_path], "»ñÈ¡ËùÓĞÈ¨", allow_fail=True)
+        self._run_cmd(["cmd", "/c", "takeown", "/f", original_path], "è·å–æ‰€æœ‰æƒ", allow_fail=True)
         self._run_cmd(["cmd", "/c", "icacls", original_path, "/grant", "Administrators:F"],
-                      "ÊÚÓè¹ÜÀíÔ±ÍêÈ«¿ØÖÆ", allow_fail=True)
-        # ´Ó±¸·İ¸²¸Ç»ØÔ­Â·¾¶
+                      "æˆäºˆç®¡ç†å‘˜å®Œå…¨æ§åˆ¶", allow_fail=True)
+        # ä»å¤‡ä»½è¦†ç›–å›åŸè·¯å¾„
         rc = self._run_cmd(["cmd", "/c", "copy", "/y", backup_file, original_path],
-                           "ÓÃ±¸·İ¸²¸Ç»ØÔ­Â·¾¶")
+                           "ç”¨å¤‡ä»½è¦†ç›–å›åŸè·¯å¾„")
         if rc != 0:
-            self.log_msg("[´íÎó] »Ö¸´Ê§°Ü (·µ»ØÂë %s): %s" % (rc, original_path))
+            self.log_msg("[é”™è¯¯] æ¢å¤å¤±è´¥ (è¿”å›ç  %s): %s" % (rc, original_path))
         else:
-            self.log_msg("[³É¹¦] ÒÑ»Ö¸´ %s" % original_path)
+            self.log_msg("[æˆåŠŸ] å·²æ¢å¤ %s" % original_path)
 
 
 
 def _preempt_meipass_cleanup():
-    """ÔÚ PyInstaller µÄ _MEIPASS ÇåÀíÂß¼­Ö®Ç°, ÏÈÒÆ×ßÁÙÊ±Ä¿Â¼¡£
+    """åœ¨ PyInstaller çš„ _MEIPASS æ¸…ç†é€»è¾‘ä¹‹å‰, å…ˆç§»èµ°ä¸´æ—¶ç›®å½•ã€‚
 
-    PyInstaller onefile Ä£Ê½ÍË³öÊ±»á³¢ÊÔÉ¾³ı _MEIPASS Ä¿Â¼, ÈôÊ§°ÜÔòµ¯ Warning ´°¿Ú¡£
-    ´Ë¹³×ÓÏÈÓÚÆäÖ´ĞĞ (atexit ºó½øÏÈ³ö), °Ñ _MEIPASS ÒÆµ½²»ÊÜ±£»¤µÄÁÙÊ±Î»ÖÃ, Ê¹ PyInstaller
-    ºóĞøÉ¾³ıÊ±ÒòÄ¿Â¼ÒÑ²»´æÔÚ¶ø¾²Ä¬Ìø¹ı, ²»ÔÙµ¯´°¡£²ĞÁôÄ¿Â¼ÓÉ Windows ÖØÆôºó×Ô¶¯ÇåÀí¡£
+    PyInstaller onefile æ¨¡å¼é€€å‡ºæ—¶ä¼šå°è¯•åˆ é™¤ _MEIPASS ç›®å½•, è‹¥å¤±è´¥åˆ™å¼¹ Warning çª—å£ã€‚
+    æ­¤é’©å­å…ˆäºå…¶æ‰§è¡Œ (atexit åè¿›å…ˆå‡º), æŠŠ _MEIPASS ç§»åˆ°ä¸å—ä¿æŠ¤çš„ä¸´æ—¶ä½ç½®, ä½¿ PyInstaller
+    åç»­åˆ é™¤æ—¶å› ç›®å½•å·²ä¸å­˜åœ¨è€Œé™é»˜è·³è¿‡, ä¸å†å¼¹çª—ã€‚æ®‹ç•™ç›®å½•ç”± Windows é‡å¯åè‡ªåŠ¨æ¸…ç†ã€‚
     """
     meipass = getattr(sys, "_MEIPASS", None)
     if not meipass or not os.path.isdir(meipass):
         return
     try:
-# Ö±½ÓÉ¾³ı¶ø·ÇÒÆ¶¯: ÒÆ¶¯ºó PyInstaller ÇåÀíÂß¼­ÈÔ»á³¢ÊÔÉ¾Ô­Ê¼Â·¾¶,
-# ÈôÎÄ¼ş¾ä±úÎ´ÊÍ·ÅÔòµ¯´°¡£rmtree É¾³ıºóÔ­Ê¼Â·¾¶²»´æÔÚ, PyInstaller ¾²Ä¬Ìø¹ı¡£
+# ç›´æ¥åˆ é™¤è€Œéç§»åŠ¨: ç§»åŠ¨å PyInstaller æ¸…ç†é€»è¾‘ä»ä¼šå°è¯•åˆ åŸå§‹è·¯å¾„,
+# è‹¥æ–‡ä»¶å¥æŸ„æœªé‡Šæ”¾åˆ™å¼¹çª—ã€‚rmtree åˆ é™¤ååŸå§‹è·¯å¾„ä¸å­˜åœ¨, PyInstaller é™é»˜è·³è¿‡ã€‚
         for retry in range(3):
             try:
                 shutil.rmtree(meipass, ignore_errors=False)
@@ -923,13 +923,13 @@ def _preempt_meipass_cleanup():
 
 
 def main():
-    # ×¢²á _MEIPASS ÇåÀíÇ°ÖÃ¹³×Ó (´ò°ü onefile Ä£Ê½Ê±·ÀÖ¹ÍË³öµ¯´°)
+    # æ³¨å†Œ _MEIPASS æ¸…ç†å‰ç½®é’©å­ (æ‰“åŒ… onefile æ¨¡å¼æ—¶é˜²æ­¢é€€å‡ºå¼¹çª—)
     atexit.register(_preempt_meipass_cleanup)
 
-    # Æô¶¯Ê±ÓÅÏÈ¼ì²éÍ¬ÎÄ¼ş¼ĞÏÂµÄ gridd-unlock-patcher.exe
+    # å¯åŠ¨æ—¶ä¼˜å…ˆæ£€æŸ¥åŒæ–‡ä»¶å¤¹ä¸‹çš„ gridd-unlock-patcher.exe
     _same_dir_patcher = os.path.join(app_dir(), "gridd-unlock-patcher.exe")
     if not os.path.exists(_same_dir_patcher):
-        # Í¬Ä¿Â¼Ã»ÓĞ; Èô´ò°üÄÚÖÃµÄÔÚ, Ò²ÔÊĞí(ÌáÊ¾µ«¼ÌĞø)
+        # åŒç›®å½•æ²¡æœ‰; è‹¥æ‰“åŒ…å†…ç½®çš„åœ¨, ä¹Ÿå…è®¸(æç¤ºä½†ç»§ç»­)
         _embedded = getattr(sys, "_MEIPASS", None)
         _embedded_ok = bool(_embedded) and os.path.exists(
             os.path.join(_embedded, "gridd-unlock-patcher.exe"))
@@ -937,22 +937,22 @@ def main():
             root0 = tk.Tk()
             root0.withdraw()
             messagebox.showerror(
-                "È±ÉÙ²¹¶¡¹¤¾ß",
-                "Î´ÕÒµ½ gridd-unlock-patcher.exe¡£\n\n"
-                "¸ÃÎÄ¼şÊÇ²¹¶¡ºËĞÄ, ±ØĞëÓëÖ÷³ÌĞò·ÅÔÚÍ¬Ò»Ä¿Â¼:\n"
+                "ç¼ºå°‘è¡¥ä¸å·¥å…·",
+                "æœªæ‰¾åˆ° gridd-unlock-patcher.exeã€‚\n\n"
+                "è¯¥æ–‡ä»¶æ˜¯è¡¥ä¸æ ¸å¿ƒ, å¿…é¡»ä¸ä¸»ç¨‹åºæ”¾åœ¨åŒä¸€ç›®å½•:\n"
                 "    %s\n\n"
-                "Çë°Ñ gridd-unlock-patcher.exe ·Åµ½¸ÃÄ¿Â¼ºóÖØĞÂÔËĞĞ¡£"
+                "è¯·æŠŠ gridd-unlock-patcher.exe æ”¾åˆ°è¯¥ç›®å½•åé‡æ–°è¿è¡Œã€‚"
                 % app_dir(),
             )
             root0.destroy()
             sys.exit(1)
-        # ½öÄÚÖÃ´æÔÚ: ÌáÊ¾ºó¼ÌĞø
+        # ä»…å†…ç½®å­˜åœ¨: æç¤ºåç»§ç»­
         root0 = tk.Tk()
         root0.withdraw()
         messagebox.showwarning(
-            "ÌáÊ¾",
-            "Ö÷³ÌĞòÍ¬Ä¿Â¼ÏÂÎ´ÕÒµ½ gridd-unlock-patcher.exe,\n"
-            "½«Ê¹ÓÃÄÚÖÃ¸±±¾¡£½¨Òé½«Æä·Åµ½Ö÷³ÌĞòÍ¬Ä¿Â¼:\n"
+            "æç¤º",
+            "ä¸»ç¨‹åºåŒç›®å½•ä¸‹æœªæ‰¾åˆ° gridd-unlock-patcher.exe,\n"
+            "å°†ä½¿ç”¨å†…ç½®å‰¯æœ¬ã€‚å»ºè®®å°†å…¶æ”¾åˆ°ä¸»ç¨‹åºåŒç›®å½•:\n"
             "    %s" % app_dir(),
         )
         root0.destroy()
