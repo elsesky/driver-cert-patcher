@@ -1,0 +1,25 @@
+# 本地详细文档 (不上传)
+LOCAL_README.md
+
+# 内部交接文档
+WORKLOG.md
+
+# 运行时产物
+backup/
+temp/
+__pycache__/
+*.pyc
+
+# 编译中间产物
+build/
+dist/
+*.spec
+
+# 发版产物 (走 GitHub Release 附件, 不入库)
+release/
+*.exe
+
+# IDE
+.vscode/
+.idea/
+*.swp
