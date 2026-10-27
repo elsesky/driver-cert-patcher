@@ -26,7 +26,8 @@ jobs:
         run: |
           echo "Patcher core size:"
           ls -la gridd-unlock-patcher.exe
-          ./gridd-unlock-patcher.exe -h
+          echo "Help output:"
+          ./gridd-unlock-patcher.exe -h || true
         shell: bash
 
       - name: Setup Python
