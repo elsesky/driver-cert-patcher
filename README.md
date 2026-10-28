@@ -185,7 +185,56 @@ build.bat 自动完成:
 
 > 全程使用相对路径 (`cd /d %~dp0` 切到工程根), 工程目录可放在含中文的路径下。
 
+
+### 4. GitHub Actions 自动构建 (推荐)
+
+仓库已配置 [GitHub Actions](.github/workflows/build.yml) 工作流,
+**打 tag 即可自动编译 + 发布 Release**, 无需本地搭建任何环境。
+
+#### 触发方式
+
+- **自动**: 推送以 `v` 开头的 tag (如 `v1.0`, `v1.1`, `v2.0`)
+- **手动**: 在 GitHub 仓库 Actions 页面点 "Run workflow"
+
+#### 工作流步骤
+
+```
+build job (windows-latest):
+  1. Checkout 源码
+  2. MinGW64 编译补丁核心 (x86_64-w64-mingw32-gcc)
+  3. 验证 -h 输出
+  4. Setup Python 3.12
+  5. 安装 PyInstaller
+  6. PyInstaller 打包主程序 (--onefile --windowed --uac-admin)
+  7. 整理 release artifacts
+  8. 上传 artifact (补丁核心 + 主程序)
+
+release job (ubuntu-latest):
+  1. 下载两个 artifact
+  2. 验证文件完整性
+  3. 创建 GitHub Release + 上传附件
+```
+
+#### 发布流程
+
+```bash
+# 1. 修改代码
+# 2. 提交 + 推 main
+git add -A && git commit -m "feat: xxx" && git push origin main
+
+# 3. 打 tag (触发自动构建)
+git tag -a v1.1 -m "v1.1: xxx"
+git push origin v1.1
+
+# 4. 等待 ~1-2 分钟, 去 Releases 页面下载
+```
+
+> GitHub runner (`windows-latest`) 自带 MinGW64 和 Python, 无需额外安装。
+> 构建产物: `NVIDIA_GRID_Driver_Patcher.exe` (~11 MB) + `gridd-unlock-patcher.exe` (~60 KB)。
+
 ## 使用 (最终用户)
+
+
 
 1. 把 `release\NVIDIA_GRID_Driver_Patcher.exe` 拷贝到目标 Windows 虚拟机。
 2. 双击运行 (自动弹出 UAC 提权框, 点"是")。
